@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Windows Launch",
+            "name": "Editor MSVC",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${command:cmake.launchTargetPath}",
-            "args": [],
-            "cwd": "${command:cmake.buildDirectory}/bin",
-            "preLaunchTask": "CMake: build",
+            "program": "D:\\Godot\\Engine\\Godot_v4.2-stable_win64.exe",
+            "args": [ "D:\\Godot\\Projects\\LingGame\\project.godot" ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMakeInstall",
             "internalConsoleOptions": "openOnSessionStart",
             "console": "internalConsole",
             "environment": [
@@ -23,13 +23,39 @@
             "visualizerFile": "${workspaceFolder}/.vscode/godot.natvis"
         },
         {
-            "name": "macOS/Linux Launch",
-            "type": "lldb",
+            "name": "Editor GDB",
+            "type": "cppdbg",
             "request": "launch",
-            "program": "${command:cmake.launchTargetPath}",
-            "args": [],
-            "cwd": "${command:cmake.buildDirectory}/bin",
+            "program": "D:\\Godot\\Engine\\Godot_v4.2-stable_win64.exe",
+            "args": [ "D:\\Godot\\Projects\\LingGame\\project.godot" ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMakeInstall",
+            "internalConsoleOptions": "openOnSessionStart",
+            "environment": [
+                {
+                    "name": "Path",
+                    "value": "${env:Path};"
+                }
+            ],
             "visualizerFile": "${workspaceFolder}/.vscode/godot.natvis"
-        }
+        },
+        {
+            "name": "Game MSVC",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "D:\\Godot\\Engine\\Godot_v4.2-stable_win64.exe",
+            "args": [  "--path", "D:\\Godot\\Projects\\LingGame" ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMakeInstall",
+            "internalConsoleOptions": "openOnSessionStart",
+            "console": "internalConsole",
+            "environment": [
+                {
+                    "name": "Path",
+                    "value": "${env:Path};"
+                }
+            ],
+            "visualizerFile": "${workspaceFolder}/.vscode/godot.natvis"
+        },
     ]
 }

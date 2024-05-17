@@ -3,15 +3,24 @@
     "tasks": [
         {
             "type": "cmake",
-            "label": "CMake: build",
+            "label": "CMakeInstall",
             "command": "build",
-            "targets": [
-                "all"
-            ],
+            "targets": [ "install" ],
             "preset": "${command:cmake.activeBuildPresetName}",
             "group": "build",
             "problemMatcher": [],
-            "detail": "CMake template build task"
+            "detail": "CMake install task: install built files into install directory",
+            "dependsOn": [ "CmakeBuild" ]
+        },
+        {
+            "type": "cmake",
+            "label": "CmakeBuild",
+            "command": "build",
+            "preset": "${command:cmake.activeBuildPresetName}",
+            "targets": [],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "CMake build task: build project file to build directory",
         }
     ]
 }

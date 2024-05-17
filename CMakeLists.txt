@@ -27,12 +27,15 @@ if ( APPLE )
 endif()
 
 # Main project information
-project( GDExtensionTemplate
+project( LingGame
     LANGUAGES
         CXX
     VERSION
         0.1.0
 )
+
+# Root project directories to define install path
+set( PROJECT_DIR "D:/Godot/Projects" )
 
 # Create our library
 add_library( ${PROJECT_NAME} SHARED )
@@ -91,7 +94,7 @@ include( GitVersionInfo )
 add_subdirectory( src )
 
 # Install library, extension file, and support files in ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-set( INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/" )
+set( INSTALL_DIR "${PROJECT_DIR}/${PROJECT_NAME}/bin" )
 
 message( STATUS "Install directory: ${INSTALL_DIR}")
 
@@ -134,7 +137,15 @@ add_subdirectory( extern/godot-cpp )
 set_target_properties( godot-cpp
     PROPERTIES
         CXX_VISIBILITY_PRESET hidden    # visibility needs to be the same as the main library
+        CMAKE_BUILD_TYPE Debug
 )
+
+# gotdot-cpp missing libraries using msys2
+# https://github.com/godotengine/godot-cpp/issues/976
+if(MINGW)
+    target_link_libraries( godot-cpp PRIVATE -static-libgcc -static-libstdc++ -static -pthread)
+endif()
+
 
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
