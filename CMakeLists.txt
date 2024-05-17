@@ -35,7 +35,8 @@ project( LingGame
 )
 
 # Root project directories to define install path
-set( PROJECT_DIR "D:/Godot/Projects" )
+# Replace with your project directory ex. "D:/Godot/Projects"
+set( PROJECT_DIR "${CMAKE_INSTALL_PREFIX}" )
 
 # Create our library
 add_library( ${PROJECT_NAME} SHARED )
