@@ -36,7 +36,7 @@ project( LingGame
 
 # Root project directories to define install path
 # Replace with your project directory ex. "D:/Godot/Projects"
-set( PROJECT_DIR "${CMAKE_INSTALL_PREFIX}" )
+set( PROJECT_DIR "D:/Godot/Projects" )
 
 # Create our library
 add_library( ${PROJECT_NAME} SHARED )
@@ -139,6 +139,12 @@ set_target_properties( godot-cpp
     PROPERTIES
         CXX_VISIBILITY_PRESET hidden    # visibility needs to be the same as the main library
         CMAKE_BUILD_TYPE Debug
+)
+
+
+target_compile_definitions( godot-cpp PUBLIC
+	# Add HOT_RELOAD support (very important)
+	HOT_RELOAD_ENABLED
 )
 
 # gotdot-cpp missing libraries using msys2
