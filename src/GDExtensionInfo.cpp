@@ -44,16 +44,17 @@ The version string is generated using godot-cpp's core/version.hpp.
 */
 godot::String GDExtensionInfo::godotCPPVersion()
 {
-    return "godot-cpp v" + godot::uitos(GODOT_VERSION_MAJOR) 
-        + "." + godot::uitos(GODOT_VERSION_MINOR) 
-        + "." + godot::uitos(GODOT_VERSION_PATCH) 
-        + "-" + GODOT_VERSION_STATUS;
+    return "godot-cpp v" + godot::uitos(GODOT_VERSION_MAJOR) //
+           + "." + godot::uitos(GODOT_VERSION_MINOR)         //
+           + "." + godot::uitos(GODOT_VERSION_PATCH)         //
+           + "-" + GODOT_VERSION_STATUS;                     //
 }
 
 /// Bind our methods so GDScript can access them.
 void GDExtensionInfo::_bind_methods()
 {
-    godot::ClassDB::bind_static_method("GDExtensionInfo", godot::D_METHOD( "name" ), &GDExtensionInfo::name);
-    godot::ClassDB::bind_static_method("GDExtensionInfo", godot::D_METHOD( "version" ), &GDExtensionInfo::version);
-    godot::ClassDB::bind_static_method("GDExtensionInfo", godot::D_METHOD( "godot_cpp_version" ), &GDExtensionInfo::godotCPPVersion);
+    godot::ClassDB::bind_static_method("GDExtensionInfo", godot::D_METHOD("name"), &GDExtensionInfo::name);
+    godot::ClassDB::bind_static_method("GDExtensionInfo", godot::D_METHOD("version"), &GDExtensionInfo::version);
+    godot::ClassDB::bind_static_method(
+        "GDExtensionInfo", godot::D_METHOD("godot_cpp_version"), &GDExtensionInfo::godotCPPVersion);
 }

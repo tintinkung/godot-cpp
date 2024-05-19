@@ -43,8 +43,12 @@ add_library( ${PROJECT_NAME} SHARED )
 
 target_compile_features( ${PROJECT_NAME}
     PRIVATE
-        cxx_std_17
+        cxx_std_20
 )
+# set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_EXTENSIONS ON)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 # LIB_ARCH is the architecture being built. It is set to the build system's architecture.
 # For macOS, we build a universal library (both arm64 and x86_64).
@@ -138,7 +142,6 @@ add_subdirectory( extern/godot-cpp )
 set_target_properties( godot-cpp
     PROPERTIES
         CXX_VISIBILITY_PRESET hidden    # visibility needs to be the same as the main library
-        CMAKE_BUILD_TYPE Debug
 )
 
 

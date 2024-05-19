@@ -3,6 +3,15 @@
     "tasks": [
         {
             "type": "cmake",
+            "label": "CMakeConfigure",
+            "command": "build",
+            "targets": [ "clang-format" ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "CMake configure task: install built files into install directory",
+        },
+        {
+            "type": "cmake",
             "label": "CMakeInstall",
             "command": "build",
             "targets": [ "install" ],

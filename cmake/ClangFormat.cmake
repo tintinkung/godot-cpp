@@ -2,6 +2,8 @@
 
 find_program( CLANG_FORMAT_PROGRAM NAMES clang-format )
 
+
+
 if ( CLANG_FORMAT_PROGRAM )
     # get version information
     execute_process(
@@ -10,23 +12,28 @@ if ( CLANG_FORMAT_PROGRAM )
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 
+    # Recursively find cpp and hpp files in src
+    file(GLOB_RECURSE
+        ALL_CXX_SOURCE_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.[hc]"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.[hc]pp"
+    )
+
     message( STATUS "Using clang-format: ${CLANG_FORMAT_PROGRAM} (${CLANG_FORMAT_VERSION})" )
 
-    get_target_property( CLANG_FORMAT_SOURCES ${PROJECT_NAME} SOURCES )
-
     # Remove some files from the list
-    list( FILTER CLANG_FORMAT_SOURCES EXCLUDE REGEX ".*/extern/.*" )
-    list( FILTER CLANG_FORMAT_SOURCES EXCLUDE REGEX ".*/gen/.*" )
-    list( FILTER CLANG_FORMAT_SOURCES EXCLUDE REGEX ".*/*.gdextension.in" )
-    list( FILTER CLANG_FORMAT_SOURCES EXCLUDE REGEX ".*/Version.h.in" )
+    list( FILTER ALL_CXX_SOURCE_FILES EXCLUDE REGEX ".*/extern/.*" )
+    list( FILTER ALL_CXX_SOURCE_FILES EXCLUDE REGEX ".*/gen/.*" )
+    list( FILTER ALL_CXX_SOURCE_FILES EXCLUDE REGEX ".*/*.gdextension.in" )
+    list( FILTER ALL_CXX_SOURCE_FILES EXCLUDE REGEX ".*/Version.h.in" )
 
     add_custom_target( clang-format
-        COMMAND "${CLANG_FORMAT_PROGRAM}" --style=file -i ${CLANG_FORMAT_SOURCES}
+        COMMAND "${CLANG_FORMAT_PROGRAM}" -i -style=file --verbose ${ALL_CXX_SOURCE_FILES}
         COMMENT "Running clang-format..."
         COMMAND_EXPAND_LISTS
         VERBATIM
     )
 
     unset( CLANG_FORMAT_VERSION )
-    unset( CLANG_FORMAT_SOURCES )
+    unset( ALL_CXX_SOURCE_FILES )
 endif()
