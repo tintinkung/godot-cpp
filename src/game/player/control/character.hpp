@@ -86,11 +86,12 @@ namespace ling
                 godot::PropertyInfo(godot::Variant::Type::FLOAT, "rotation_speed"), godot::String("set_rotation_speed"),
                 godot::String("get_rotation_speed"));
 
-            // godot::ClassDB::add_signal(Character::get_class_static(), 
-            //     godot::MethodInfo(event::position_changed, godot::Variant::OBJECT, godot::Variant::VECTOR2));
+            std::vector<godot::PropertyInfo> position_info{ 
+                godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info(), 
+                godot::GetTypeInfo<std::type_identity_t<godot::Vector2>>().get_class_info() };
 
-            // signal_binding<Character, event::position_changed>::add<godot::Object*, godot::Vector2>(); 
-            // signal_binding<Character, event::spawn_projectile>::add<godot::Object*, godot::Vector2>();
+            godot::ClassDB::add_signal(Character::get_class_static(), 
+                godot::MethodInfo(event::character_move, std::forward<decltype(position_info)>(position_info)));
         }
 
     protected:

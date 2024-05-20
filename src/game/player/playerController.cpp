@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/variant.hpp>
 
 #include "../utils/constants.hpp"
+#include "../utils/input.hpp"
 #include "./playerController.hpp"
 
 namespace ling
@@ -18,8 +19,14 @@ namespace ling
 
     void PlayerController::process_movement_input(godot::Input* const input, double delta_time)
     {
-        auto velocity{ input->get_vector(constants::action::move_left, constants::action::move_right,
-            constants::action::move_up, constants::action::move_down) };
+        auto velocity{ 
+            input->get_vector(
+                input::action::move_left, 
+                input::action::move_right,
+                input::action::move_up, 
+                input::action::move_down
+            ) 
+        };
         this->emit_signal(event::character_move, velocity, delta_time);
     }
 

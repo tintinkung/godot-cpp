@@ -46,7 +46,7 @@ namespace ling
             //     std::forward_as_tuple(godot::Callable(this, "on_character_movement"), 
             // this))) };
 
-            // controller->connect(event::character_move, callback_movement);
+            controller->connect(event::character_move, godot::Callable(this, "on_character_movement"));
 
             // godot::Callable&& callback_rotate{ 
             //     std::forward<godot::Callable>(
@@ -54,7 +54,7 @@ namespace ling
             //     std::forward_as_tuple(godot::Callable(this, "on_character_rotate"), 
             // this))) };
 
-            // controller->connect(event::character_rotate, callback_rotate);
+            controller->connect(event::character_rotate, godot::Callable(this, "on_character_rotate"));
                 
         //     signal<event::character_move>::connect<CharacterController>(m_character_controller)
         //     <=>

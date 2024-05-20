@@ -67,7 +67,9 @@ namespace ling
             godot::GetTypeInfo<std::type_identity_t<double>>().get_class_info() };
 
 
-        std::vector<godot::PropertyInfo> shoot_info{ godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info() };
+        std::vector<godot::PropertyInfo> shoot_info{ 
+            godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info()
+        };
 
         std::vector<godot::PropertyInfo> position_info{ 
             godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info(), 

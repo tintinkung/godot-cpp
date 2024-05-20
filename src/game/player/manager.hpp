@@ -41,7 +41,7 @@ namespace ling
     private:
         std::atomic<bool> m_active{ false };
         godot::Node* m_background{ nullptr };
-        PlayerController* m_controller{ memnew(PlayerController) };
+        PlayerController* m_controller{ nullptr };
         Player* m_player{ memnew(Player) };
         godot::RigidBody2D* m_physics_box{ nullptr };
     };

@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/callable.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 #include "./control/character.hpp"
 #include "./playerController.hpp"
@@ -15,27 +16,27 @@ namespace ling
     Manager::Manager()
     {
         // scene::node::set_unique_name(this, name::level::level1);
+        this->m_controller = memnew(PlayerController);
         this->activate(true);
         this->m_player->set_controller(this->m_controller);
     }
 
     void Manager::_ready()
     {
-        godot::Node* box{ this->find_child("name::level::physics_box") };
+        godot::Node* box{ this->find_child("physicsBox") };
         m_physics_box = godot::Object::cast_to<godot::RigidBody2D>(box);
 
         this->add_child(m_player);
 
-        CharacterController* controller{ m_player->get_controller() };
-        if (controller != nullptr)
+        if (m_player->get_controller() != nullptr)
         {
-            godot::Callable&& callback_position{ 
-                std::forward<godot::Callable>(
-                std::get<0>(
-                std::forward_as_tuple(godot::Callable(this, "on_character_position_changed"), 
-            this))) };
+            // godot::Callable&& callback_position{ 
+            //     std::forward<godot::Callable>(
+            //     std::get<0>(
+            //     std::forward_as_tuple(godot::Callable(this, "on_character_position_changed"), 
+            // this))) };
 
-            controller->connect(event::position_changed, callback_position);
+            m_player->get_controller()->connect(event::position_changed, godot::Callable(this, "on_character_position_changed"));
 
             // signal<event::position_changed>::connect<CharacterController>(controller) <=>
             //     signal_callback(this, on_character_position_changed);
@@ -81,16 +82,19 @@ namespace ling
     void Manager::on_physics_box_entered(godot::Node* node) const
     {
         // console::get()->print("{} > {}", io::yellow("projectile"), to<std::string>(node->get_name()));
+        godot::UtilityFunctions::print("physic box entered:", node->get_name());
     }
 
     void Manager::on_physics_box_exited(godot::Node* node) const
     {
         // console::get()->print("{} < {}", io::red("projectile"), to<std::string>(node->get_name()));
+        godot::UtilityFunctions::print("physic box exited:", node->get_name());
     }
 
     void Manager::on_character_position_changed(const godot::Object* const node,
                                               godot::Vector2 location) const
     {
+        godot::UtilityFunctions::print("location: x:", location.x, " y: ", location.y);
         // auto console{ console::get() };
         // console->print("{} ({},{})", io::green(to<std::string>(node->get_class()) + " location: "),
         //                io::orange(location.x), io::orange(location.y));
