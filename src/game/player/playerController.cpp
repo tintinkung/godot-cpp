@@ -11,9 +11,9 @@ namespace ling
 {
     void PlayerController::process_action_input(godot::Input* const input, double delta_time)
     {
-        if (input->is_action_pressed("shoot"))
+        if (input->is_action_pressed("jump"))
         {
-            this->emit_signal(event::character_shoot);
+            this->emit_signal(event::character_jump);
         }
     }
 
@@ -88,9 +88,9 @@ namespace ling
                 [[fallthrough]];
             case InputMode::MouseAndKeyboard:
             {
-                godot::Vector2 rotation_dir{ this->get_global_mouse_position() - this->get_global_position() };
+                // godot::Vector2 rotation_dir{ this->get_global_mouse_position() - this->get_global_position() };
 
-                m_rotation_angle = rotation_dir.angle() + godot::Math::deg_to_rad(90.0);
+                // m_rotation_angle = rotation_dir.angle() + godot::Math::deg_to_rad(90.0);
                 break;
             }
             case InputMode::Controller:

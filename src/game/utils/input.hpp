@@ -16,7 +16,7 @@ namespace ling::inline utils
             constexpr inline auto move_right{ "move_right" };
             constexpr inline auto move_up{ "move_up" };
             constexpr inline auto move_down{ "move_down" };
-            constexpr inline auto shoot{ "shoot" };
+            constexpr inline auto jump{ "jump" };
         }
 
         struct map
@@ -26,6 +26,7 @@ namespace ling::inline utils
 
         godot::Input* get();
 
+        void capture_cursor();
         void hide_cursor();
         void show_cursor();
         bool cursor_visible();

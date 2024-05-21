@@ -1,7 +1,7 @@
 #pragma once
 
 #include <concepts>
-#include <godot_cpp/classes/character_body2d.hpp>
+#include <godot_cpp/classes/character_body3d.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <memory>
 
@@ -15,6 +15,7 @@ namespace godot
     class Object;
     class Variant;
     struct Vector2;
+    class InputEvent;
 }
 
 namespace ling
@@ -24,16 +25,17 @@ namespace ling
 
 namespace ling
 {
-    class Character : public godot::CharacterBody2D
+    class Character : public godot::CharacterBody3D
     {
-        GDCLASS(Character, godot::CharacterBody2D)
+        GDCLASS(Character, godot::CharacterBody3D)
 
     public:
         Character();
         virtual ~Character() = default;
 
         virtual void _ready() override;
-
+        void _process(double delta_time);
+        
     public:
         CharacterController* get_controller() const;
         void set_controller(CharacterController* controller);
@@ -47,26 +49,15 @@ namespace ling
         void set_movement_friction(const double move_friction);
         void set_rotation_speed(const double rotation_speed);
 
-        void on_character_shoot();
-        void on_character_rotate(double rotation_angle, double delta_time);
-        void on_character_movement(godot::Vector2 movement_velocity, double delta_time);
+        virtual void on_character_jump();
+        virtual void on_character_movement(godot::Vector2 movement_velocity, double delta_time);
 
     protected:
         static void _bind_methods()
         {
-            // bind_member_function(Character, on_character_movement);
-            // bind_member_function(Character, on_character_rotate);
-            // bind_member_function(Character, on_character_shoot);
 
             godot::ClassDB::bind_method(godot::D_METHOD("on_character_movement"), &Character::on_character_movement);
-            godot::ClassDB::bind_method(godot::D_METHOD("on_character_rotate"), &Character::on_character_rotate);
-            godot::ClassDB::bind_method(godot::D_METHOD("on_character_shoot"), &Character::on_character_shoot);
-
-            // bind_property(Character, movement_speed, double);
-            // bind_property(Character, movement_friction, double);
-            // bind_property(Character, rotation_speed, double);
-
-            // const godot::PropertyInfo property_info(godot::Variant::Type::FLOAT, "movement_speed");
+            godot::ClassDB::bind_method(godot::D_METHOD("on_character_jump"), &Character::on_character_jump);
 
             godot::ClassDB::bind_method(godot::D_METHOD("set_movement_speed"), &Character::set_movement_speed);
             godot::ClassDB::bind_method(godot::D_METHOD("get_movement_speed"), &Character::get_movement_speed);
@@ -104,11 +95,21 @@ namespace ling
         // target facing angle (radians)
         double m_rotation_angle{ 0.0 };
 
-        // the player character camera
-        Camera* m_camera{ memnew(Camera) };
+        double m_jumpHeight{ 3.5f };
+
+        double m_jumpTimeout{ 0.1f };
+
+        double m_fallTimeout{ 0.15f };
+
+        double m_terminalVelocity{ 10.0f };
+
+        double m_jumpTimeoutDelta;
+		double m_fallTimeoutDelta;
+        double m_verticalVelocity;
+        bool m_isOnJump{ false };
+
         // handles all input related player controls
         CharacterController* m_character_controller{ nullptr };
-        // marker identifying location where to spwwn projectiles
-        godot::Marker2D* m_firing_point{ nullptr };
+        
     };
 }

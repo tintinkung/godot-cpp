@@ -14,7 +14,7 @@ namespace ling::inline constants
         constexpr inline auto spawn_projectile{ "spawn_projectile" };
         constexpr inline auto character_move{ "character_move" };
         constexpr inline auto character_rotate{ "character_rotate" };
-        constexpr inline auto character_shoot{ "character_shoot" };
+        constexpr inline auto character_jump{ "character_jump" };
         constexpr inline auto body_entered{ "body_entered" };
         constexpr inline auto body_exited{ "body_exited" };
     }

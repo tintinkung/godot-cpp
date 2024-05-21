@@ -4,17 +4,11 @@
 #include <vector>
 
 #include <godot_cpp/classes/input.hpp>
-#include <godot_cpp/classes/marker2d.hpp>
-#include <godot_cpp/classes/rectangle_shape2d.hpp>
-#include <godot_cpp/classes/ref.hpp>
-#include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/math.hpp>
 #include <godot_cpp/variant/callable.hpp>
-#include <godot_cpp/variant/color.hpp>
-#include <godot_cpp/variant/typed_array.hpp>
-#include <godot_cpp/variant/vector2.hpp>
-
+#include <godot_cpp/variant/vector3.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 #include "./character.hpp"
 
@@ -22,47 +16,21 @@ namespace ling
 {
     Character::Character()
     {
-        this->set_motion_mode(MotionMode::MOTION_MODE_FLOATING);
+        this->set_motion_mode(MotionMode::MOTION_MODE_GROUNDED);
     }
 
     void Character::_ready()
     {
-        Node2D* controller{ godot::Object::cast_to<Node2D>((Object*) m_character_controller) };
-        this->add_child(m_camera);
-        this->add_child(controller);
-
-        // m_firing_point = gdcast<godot::Marker2D>(
-        //     this->find_child(name::character::firing_pt, true, false));
-
-        // runtime_assert(m_firing_point != nullptr);
-        // if (!engine::editor_active())
-        //     runtime_assert(m_character_controller != nullptr);
-
+        Node3D* controller{ godot::Object::cast_to<Node3D>((Object*) m_character_controller) };
+        
         if (m_character_controller != nullptr)
         {
-            // godot::Callable&& callback_movement{ 
-            //     std::forward<godot::Callable>(
-            //     std::get<0>(
-            //     std::forward_as_tuple(godot::Callable(this, "on_character_movement"), 
-            // this))) };
-
+            this->add_child(controller);
             controller->connect(event::character_move, godot::Callable(this, "on_character_movement"));
+            controller->connect(event::character_jump, godot::Callable(this, "on_character_jump"));
 
-            // godot::Callable&& callback_rotate{ 
-            //     std::forward<godot::Callable>(
-            //     std::get<0>(
-            //     std::forward_as_tuple(godot::Callable(this, "on_character_rotate"), 
-            // this))) };
-
-            controller->connect(event::character_rotate, godot::Callable(this, "on_character_rotate"));
-                
-        //     signal<event::character_move>::connect<CharacterController>(m_character_controller)
-        //     <=>
-        //         signal_callback(this, on_character_movement);
-
-        //     signal<event::character_rotate>::connect<CharacterController>(m_character_controller)
-        //     <=>
-        //         signal_callback(this, on_character_rotate);
+            m_jumpTimeoutDelta = m_jumpTimeout;
+		    m_fallTimeoutDelta = m_fallTimeout;
         }
     }
 
@@ -80,24 +48,46 @@ namespace ling
     void Character::on_character_movement(godot::Vector2 movement_velocity, double delta_time)
     {
         double increment = m_movement_friction * delta_time;
-        godot::Vector2 velocity{ this->get_velocity().lerp(movement_velocity, increment) };
-        velocity = velocity.clamp({ -1.0, -1.0 }, { 1.0, 1.0 });
+        godot::Basis basis = this->get_transform().get_basis();
+        godot::Vector3 direction = basis.xform_inv({ movement_velocity.x, 0, movement_velocity.y });
+
+        godot::Vector3 velocity{ this->get_velocity().lerp(direction, increment) };
+
         this->translate(velocity * this->get_movement_speed() * delta_time);
-        this->set_velocity(velocity);
+        this->set_velocity({ direction.normalized().x, (real_t) delta_time * (real_t) -98.0f, direction.normalized().z });
         this->move_and_slide();
     }
 
-    void Character::on_character_rotate(double rotation_angle, double delta_time)
+    void Character::on_character_jump()
     {
-        double smoothed_angle
-            = godot::Math::lerp_angle(this->get_rotation(), rotation_angle, m_rotation_speed * delta_time);
-        this->set_rotation(smoothed_angle);
+        if(this->is_on_floor())
+        {
+            m_verticalVelocity = -m_jumpHeight;
+            godot::UtilityFunctions::print("Updated Velocity: ", m_verticalVelocity, " delta: ", m_jumpTimeoutDelta);
+            this->set_motion_mode(MotionMode::MOTION_MODE_GROUNDED);
+            m_isOnJump = true;
+        }
     }
 
-    void Character::on_character_shoot()
+    void Character::_process(double delta_time)
     {
-        // TODO: fix this
-        this->emit_signal(event::spawn_projectile, m_firing_point);
+        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+        if(!this->is_on_floor())
+        {
+            if (m_verticalVelocity < m_terminalVelocity)
+            {
+                m_verticalVelocity += 9.8f * delta_time;
+            }
+        }
+        else
+        {
+            if(!m_isOnJump) 
+            {
+                m_verticalVelocity = 2.0f;
+                this->set_motion_mode(MotionMode::MOTION_MODE_GROUNDED);
+            }
+            else m_isOnJump = false;
+        }
     }
 
     double Character::get_movement_speed() const

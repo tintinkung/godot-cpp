@@ -19,6 +19,12 @@ namespace ling::inline utils
         return input;
     }
 
+    void input::capture_cursor()
+    {
+        godot::Input* const input{ input::get() };
+        input->set_mouse_mode(godot::Input::MOUSE_MODE_CAPTURED);
+    }
+
     void input::hide_cursor()
     {
         godot::Input* const input{ input::get() };

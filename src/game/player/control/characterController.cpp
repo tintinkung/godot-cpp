@@ -16,7 +16,7 @@
 
 namespace ling
 {
-    void CharacterController::_process(double delta_time)
+    void CharacterController::_physics_process(double delta_time)
     {
         godot::Engine* engine{ godot::Engine::get_singleton() };
 
@@ -36,7 +36,10 @@ namespace ling
             if (m_elapsed_time > 1.0)
             {
                 m_elapsed_time = 0.0;
-                this->emit_signal(event::position_changed, this->get_parent(), this->get_global_position());
+                this->emit_signal(event::position_changed, this->get_parent(), godot::Vector2{
+                    this->get_global_position().x, 
+                    this->get_global_position().z
+                });
             }
         }
     }
@@ -66,11 +69,6 @@ namespace ling
             godot::GetTypeInfo<std::type_identity_t<double>>().get_class_info(), 
             godot::GetTypeInfo<std::type_identity_t<double>>().get_class_info() };
 
-
-        std::vector<godot::PropertyInfo> shoot_info{ 
-            godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info()
-        };
-
         std::vector<godot::PropertyInfo> position_info{ 
             godot::GetTypeInfo<std::type_identity_t<godot::Object*>>().get_class_info(), 
             godot::GetTypeInfo<std::type_identity_t<godot::Vector2>>().get_class_info() };
@@ -82,10 +80,10 @@ namespace ling
             godot::MethodInfo(event::character_rotate, std::forward<decltype(rotate_info)>(rotate_info)));
 
         godot::ClassDB::add_signal(CharacterController::get_class_static(), 
-            godot::MethodInfo(event::character_shoot, std::forward<decltype(shoot_info)>(shoot_info)));
-
-        godot::ClassDB::add_signal(CharacterController::get_class_static(), 
             godot::MethodInfo(event::position_changed, std::forward<decltype(position_info)>(position_info)));
+
+        godot::ClassDB::add_signal(CharacterController::get_class_static(), godot::MethodInfo(event::character_jump));
+
         
 
         // signal_binding<CharacterController, event::character_move>::add<godot::Vector2, double>();

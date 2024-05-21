@@ -3,15 +3,15 @@
 #include <type_traits>
 
 #include <godot_cpp/classes/input.hpp>
-#include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 
 namespace ling
 {
-    class CharacterController : public godot::Node2D
+    class CharacterController : public godot::Node3D
     {
-        GDCLASS(CharacterController, godot::Node2D)
+        GDCLASS(CharacterController, godot::Node3D)
 
     public:
         enum class InputMode
@@ -25,7 +25,7 @@ namespace ling
         CharacterController() = default;
         virtual ~CharacterController() = default;
 
-        void _process(double delta_time) override;
+        void _physics_process(double delta_time) override;
 
         virtual void process_action_input(godot::Input* const input, double delta_time);
         virtual void process_movement_input(godot::Input* const input, double delta_time);

@@ -30,19 +30,8 @@ namespace ling
 
         if (m_player->get_controller() != nullptr)
         {
-            // godot::Callable&& callback_position{ 
-            //     std::forward<godot::Callable>(
-            //     std::get<0>(
-            //     std::forward_as_tuple(godot::Callable(this, "on_character_position_changed"), 
-            // this))) };
 
             m_player->get_controller()->connect(event::position_changed, godot::Callable(this, "on_character_position_changed"));
-
-            // signal<event::position_changed>::connect<CharacterController>(controller) <=>
-            //     signal_callback(this, on_character_position_changed);
-
-            // signal<event::spawn_projectile>::connect<Player>(m_player) <=>
-            //     signal_callback(this, on_player_spawn_projectile);
         }
     }
 
