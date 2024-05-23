@@ -17,7 +17,7 @@ namespace ling
 
     void Player::_ready()
     {
-        utils::input::capture_cursor();
+        // utils::input::capture_cursor();
         Character::_ready();
         
         Node3D* head{ godot::Object::cast_to<Node3D>(this->find_child("Head")) };
