@@ -36,7 +36,7 @@ project( LingGame
 
 # Root project directories to define install path
 # Replace with your project directory ex. "D:/Godot/Projects"
-set( PROJECT_DIR "D:/Godot/Projects" )
+set( PROJECT_DIR "C:/GODOT/Project" )
 
 # Create our library
 add_library( ${PROJECT_NAME} SHARED )
